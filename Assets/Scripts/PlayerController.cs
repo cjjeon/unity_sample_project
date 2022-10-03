@@ -1,15 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] NavMeshAgent m_NavMeshAgent;
-    
+
     private Animator m_Animator;
-    private AlphabetInventory _alphabetInventory = new AlphabetInventory();
+    public InventoryObject inventory;
 
     void Start()
     {
@@ -34,8 +35,14 @@ public class PlayerController : MonoBehaviour
         m_NavMeshAgent.SetDestination(point);
     }
 
-    public void CollectAlphabet(string character)
+    private void OnTriggerEnter(Collider other)
     {
-        _alphabetInventory.AddAlphabet(character);
+        Debug.Log("Collide: ", other);
+        var item = other.GetComponent<Item>();
+        if (item)
+        {
+            inventory.AddItem(item.itemObject, 1);
+            Destroy(other.gameObject);
+        }
     }
 }
