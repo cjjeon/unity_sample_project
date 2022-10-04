@@ -25,7 +25,7 @@ public class DisplayInventory : MonoBehaviour
         
     }
 
-    private void CreateDisplay()
+    public void CreateDisplay()
     {
         itemsDisplayed = new Dictionary<InventorySlot, GameObject>();
         
