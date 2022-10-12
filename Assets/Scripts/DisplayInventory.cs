@@ -10,9 +10,6 @@ public class DisplayInventory : MonoBehaviour
     public GameObject inventoryItemUI;
     public InventoryObject inventory;
 
-    private int NUM_OF_COLUMNS = 6;
-    private Dictionary<InventorySlot, GameObject> itemsDisplayed = new Dictionary<InventorySlot, GameObject>();
-
     // Start is called before the first frame update
     void Start()
     {
@@ -27,29 +24,23 @@ public class DisplayInventory : MonoBehaviour
 
     public void CreateDisplay()
     {
-        itemsDisplayed = new Dictionary<InventorySlot, GameObject>();
+        foreach (Transform item in transform)
+        {
+            Destroy(item.gameObject);
+        }
         
         for (int i = 0; i < inventory.Container.Count; i++)
         {
             var inventorySlot = inventory.Container[i];
-            
-            var row = i / NUM_OF_COLUMNS;
-            var column = i % NUM_OF_COLUMNS;
-            
-            var rowChild = transform.GetChild(row);
-            var item = rowChild.transform.GetChild(column);
-            item.GetChild(1).transform.GetComponentInChildren<Image>().sprite = inventorySlot.item.image;
+            GameObject obj = Instantiate(inventoryItemUI, transform);
+
+            obj.transform.Find("Image").GetComponent<Image>().sprite = inventorySlot.item.image;
             if (inventorySlot.amount > 1)
             {
-                var textMesh = item.GetChild(2).GetComponent<TMP_Text>();
+                var textMesh = obj.transform.Find("Amount").GetComponent<TMP_Text>();
                 if (textMesh)
                     textMesh.text = inventorySlot.amount.ToString();
             }
-            
-            Debug.Log("Slot: " + i + ", Row: " + row + ", COLUMN: " + column);
-            // var obj = Instantiate(inventoryItemUI, Vector3.zero, Quaternion.identity, transform);
-            // obj.transform.GetChild(1).GetComponentInChildren<Image>().sprite = inventorySlot.item.image;
-            // itemsDisplayed.Add(inventorySlot, inventorySlot);
         }
     }
     
